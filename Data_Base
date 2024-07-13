@@ -4,57 +4,71 @@ with sq.connect("FN-Base.db") as FN:
     cur = FN.cursor()
     cur.execute("DROP TABLE IF EXISTS 'FN-type'")
     cur.execute("""CREATE TABLE IF NOT EXISTS 'FN-type'(
+                id INTEGER NOT NULL PRIMORY KEY,
                 'Срок работы' INTEGER NOT NULL DEFAULT 16
                 )
                 """)
-    cur.execute("INSERT INTO 'FN-type' VALUES(16)")
-    cur.execute("INSERT INTO 'FN-type' VALUES(32)")
+    cur.execute("INSERT INTO 'FN-type' VALUES(1,16)")
+    cur.execute("INSERT INTO 'FN-type' VALUES(2,32)")
 
-    cur.execute("DROP TABLE IF EXISTS 'Контактное_лицо'")
-    cur.execute("""CREATE TABLE IF NOT EXISTS 'Контактное лицо'(
+    cur.execute("DROP TABLE IF EXISTS 'Контактные_лица'")
+    cur.execute("""CREATE TABLE IF NOT EXISTS 'Контактные лица'(
+                id INTEGER NOT NULL PRIMORY KEY,
                 ФИО TEXT NOT NULL DEFAULT 'Иванов Иван Иванович',
                 Пол TEXT NOT NULL DEFAULT м
                 )
                 """)
     
-    cur.execute("DROP TABLE IF EXISTS Связь")
-    cur.execute("""CREATE TABLE IF NOT EXISTS Связь(
+    cur.execute("DROP TABLE IF EXISTS 'Контактная информация'")
+    cur.execute("""CREATE TABLE IF NOT EXISTS 'Контактная информация'(
+                id INTEGER NOT NULL PRIMORY KEY,
                 ФИО TEXT NOT NULL DEFAULT 'Иванов Иван Иванович',
                 Контакт TEXT NOT NULL,
                 'Тип связи' TEXT NOT NULL,
-                Приоритет INTEGER DEFAULT 0
+                Приоритет INTEGER DEFAULT 0,
+                FOREIGN KEY (ФИО) REFERENCES 'Контактные_лица'(id),
                 )
                 """)
     
     cur.execute("DROP TABLE IF EXISTS 'Отправка сообщений'")
     cur.execute("""CREATE TABLE IF NOT EXISTS 'Отправка сообщений'(
+                id INTEGER NOT NULL PRIMORY KEY,
                 Получатель TEXT NOT NULL,
                 'Серийный номер FN' INTEGER NOT NULL,
                 'Дата отправки' TEXT NOT NULL,
                 Статус TEXT NOT NULL,
-                'Способ отправки' TEXT NOT NULL
+                'Способ отправки' TEXT NOT NULL,
+                FOREIGN KEY (Получатель) REFERENCES Организации(id),
+                FOREIGN KEY ('Серийный номер FN') REFERENCES MAIN(id),
+                FOREIGN KEY ('Способ отправки') REFERENCES 'Контактная информация'(id)
                 )
                 """)
     
-    cur.execute("DROP TABLE IF EXISTS Организация")
+    cur.execute("DROP TABLE IF EXISTS Организации")
     cur.execute("""CREATE TABLE IF NOT EXISTS Организация(
+                id INTEGER NOT NULL PRIMORY KEY,
                 Название TEXT NOT NULL DEFAULT 'ООО ',
                 'Контактное лицо' TEXT NOT NULL,
                 'Юр. адрес' TEXT NOT NULL,
                 ИНН INTEGER NOT NULL,
-                КПП INTEGER NOT NULL
+                КПП INTEGER NOT NULL,
+                FOREIGN KEY ('Контактное лицо') REFERENCES 'Контактные_лица'(id)
                 )
                 """)
     
     cur.execute("DROP TABLE IF EXISTS MAIN")
     cur.execute("""CREATE TABLE IF NOT EXISTS MAIN(
+                id INTEGER NOT NULL PRIMORY KEY,
                 'Серийный номер FN' TEXT NOT NULL,
-                'Тип FN' TEXT NOT NULL,
+                'Тип номенклатуры' TEXT NOT NULL,
                 Организация TEXT NOT NULL,
                 'Дата установки' TEXT NOT NULL,
+                'Дата окончания' TEXT NOT NULL,
                 'Серийный номер нового FN' TEXT NOT NULL,
                 Примечание TEXT,
-                'Место установки' TEXT NOT NULL
+                'Место установки' TEXT NOT NULL,
+                FOREIGN KEY ('Тип номенклатуры') REFERENCES 'FN-type'(id),
+                FOREIGN KEY (Организация) REFERENCES Организации(id)
                 )
                 """)
 
