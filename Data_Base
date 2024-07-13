@@ -4,7 +4,7 @@ with sq.connect("FN-Base.db") as FN:
     cur = FN.cursor()
     cur.execute("DROP TABLE IF EXISTS 'FN-type'")
     cur.execute("""CREATE TABLE IF NOT EXISTS 'FN-type'(
-                id INTEGER NOT NULL PRIMORY KEY,
+                id INTEGER NOT NULL PRIMARY KEY,
                 'Срок работы' INTEGER NOT NULL DEFAULT 16
                 )
                 """)
@@ -13,7 +13,7 @@ with sq.connect("FN-Base.db") as FN:
 
     cur.execute("DROP TABLE IF EXISTS 'Контактные_лица'")
     cur.execute("""CREATE TABLE IF NOT EXISTS 'Контактные лица'(
-                id INTEGER NOT NULL PRIMORY KEY,
+                id INTEGER NOT NULL PRIMARY KEY,
                 ФИО TEXT NOT NULL DEFAULT 'Иванов Иван Иванович',
                 Пол TEXT NOT NULL DEFAULT м
                 )
@@ -21,18 +21,18 @@ with sq.connect("FN-Base.db") as FN:
     
     cur.execute("DROP TABLE IF EXISTS 'Контактная информация'")
     cur.execute("""CREATE TABLE IF NOT EXISTS 'Контактная информация'(
-                id INTEGER NOT NULL PRIMORY KEY,
+                id INTEGER NOT NULL PRIMARY KEY,
                 ФИО TEXT NOT NULL DEFAULT 'Иванов Иван Иванович',
                 Контакт TEXT NOT NULL,
                 'Тип связи' TEXT NOT NULL,
                 Приоритет INTEGER DEFAULT 0,
-                FOREIGN KEY (ФИО) REFERENCES 'Контактные_лица'(id),
+                FOREIGN KEY (ФИО) REFERENCES 'Контактные_лица'(id)
                 )
                 """)
     
     cur.execute("DROP TABLE IF EXISTS 'Отправка сообщений'")
     cur.execute("""CREATE TABLE IF NOT EXISTS 'Отправка сообщений'(
-                id INTEGER NOT NULL PRIMORY KEY,
+                id INTEGER NOT NULL PRIMARY KEY,
                 Получатель TEXT NOT NULL,
                 'Серийный номер FN' INTEGER NOT NULL,
                 'Дата отправки' TEXT NOT NULL,
@@ -46,7 +46,7 @@ with sq.connect("FN-Base.db") as FN:
     
     cur.execute("DROP TABLE IF EXISTS Организации")
     cur.execute("""CREATE TABLE IF NOT EXISTS Организация(
-                id INTEGER NOT NULL PRIMORY KEY,
+                id INTEGER NOT NULL PRIMARY KEY,
                 Название TEXT NOT NULL DEFAULT 'ООО ',
                 'Контактное лицо' TEXT NOT NULL,
                 'Юр. адрес' TEXT NOT NULL,
@@ -58,7 +58,7 @@ with sq.connect("FN-Base.db") as FN:
     
     cur.execute("DROP TABLE IF EXISTS MAIN")
     cur.execute("""CREATE TABLE IF NOT EXISTS MAIN(
-                id INTEGER NOT NULL PRIMORY KEY,
+                id INTEGER NOT NULL PRIMARY KEY,
                 'Серийный номер FN' TEXT NOT NULL,
                 'Тип номенклатуры' TEXT NOT NULL,
                 Организация TEXT NOT NULL,
